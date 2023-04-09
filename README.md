@@ -150,7 +150,8 @@ data transformation과 validation을 수행한다.
 파이프의 사용은 3가지 레벨에서 가능하다.
 
 1. 핸들러 레벨 파이프  
-   핸들러의 모든파라미터에 적용된다.
+   핸들러의 모든파라미터에 적용된다.  
+    @UsePipes() 데커레이터를 사용한다.
 
    ```typescript
    @Post()
@@ -185,3 +186,31 @@ data transformation과 validation을 수행한다.
    ```
 
 ### 파이프를 이용한 유효성 체크
+
+밸리데이션과 트랜스포메이션을 위한 패키지 설치  
+`npm i class-validator class-transformer`
+
+아래와 같이 dto에 데커레이터를 적용하면 손쉽게 유효성 체크 가능
+라고 생각했으나 나의 착각!!
+dto에 적용된 데커레이터를 활성화시키려면 handler레벨에서 파이프를 사용하도록 설정해줘야 한다.
+
+```typescript
+import { IsNotEmpty } from 'class-validator';
+export class createBoardDto {
+  @IsNotEmpty()
+  title: string;
+
+  @IsNotEmpty()
+  description: string;
+}
+```
+
+따라서 아래와 핸들러에 추가로 설정해줘야 dto에 설정한 validation이 제대로 작동한다.
+
+```typescript
+  @Post('/')
+  @UsePipes(ValidationPipe)
+  createBoard(@Body() createBoardDto: createBoardDto): Board {
+    return this.boardsService.createBoard(createBoardDto);
+  }
+```
