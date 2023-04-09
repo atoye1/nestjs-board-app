@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Board, BoardStatus } from './board.model';
 import { v1 as uuid } from 'uuid';
 import { createBoardDto } from './dto/create-board.dto';
+import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class BoardsService {
@@ -24,11 +25,14 @@ export class BoardsService {
   }
 
   getBoardById(id: string): Board {
-    return this.boards.find((elem) => elem.id === id);
+    const found = this.boards.find((elem) => elem.id === id);
+    if (!found) throw new NotFoundException(`id ${id} is not exists`);
+    return found;
   }
 
   deleteBoard(id: string): void {
-    this.boards = this.boards.filter((elem) => elem.id !== id);
+    const found = this.getBoardById(id);
+    this.boards = this.boards.filter((elem) => elem.id !== found.id);
   }
 
   updateBoardStatus(id: string, status: BoardStatus): Board {
