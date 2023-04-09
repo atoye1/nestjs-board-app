@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { Board } from './board.model';
+import { createBoardDto } from './dto/create-board.dto';
 
 @Controller('boards') // 기본 라우팅
 export class BoardsController {
@@ -12,11 +13,7 @@ export class BoardsController {
   }
 
   @Post('/')
-  createBoard(
-    @Body('title') title: string,
-    @Body('description') description: string,
-  ): Board {
-    console.log(title, description);
-    return this.boardsService.createBoard(title, description);
+  createBoard(@Body() createBoardDto: createBoardDto): Board {
+    return this.boardsService.createBoard(createBoardDto);
   }
 }
