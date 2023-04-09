@@ -5,6 +5,10 @@
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
+## 레퍼런스
+
+https://www.youtube.com/watch?v=3JminDpCJNE&t=513s
+
 ## 프로젝트 기본 구조
 
 .eslintrc.js : 특정한 규칙에 따라 코드를 작성할 수 있게 도와주는 가이드라인. 코드컨벤션  
@@ -214,3 +218,43 @@ export class createBoardDto {
     return this.boardsService.createBoard(createBoardDto);
   }
 ```
+
+### 커스텀 파이프 구현
+
+먼저 PipeTransfrom이란 인터페이스를 새로운 커스텀 파이프에 구현해줘야 한다.
+해당 인터페이스에 있는 transfrom()메서드를 커스텀파이프 클래스에서 정의해줘야 한다.
+transfrom 메서드의 파라미터는 value, metadata이다.
+
+커스텀 파이프를 구현해서 value, metadata를 콘솔로 찍어보자.
+
+BoardStatusValidationPipe를 enum에서 정의된 PUBLIC | PRIVATE 이외의 값이 들어올때 에러를 던지도록 구현해야 한다.  
+필요한 자료구조를 정의하고, 조건에 부합하면 value를 반환하고, 아니면 BadRequestException을 던지면 된다.
+
+### postgresSQL 과 typeORM
+
+패키지 설치  
+`npm i pg typeorm @nestjs/typeorm`
+공식문서 참고  
+https://docs.nestjs.com/techniques/database
+
+### typeorm 설정
+
+typeorm.config.ts 설정
+
+### entity 생성하기
+
+ORM이므로 클래스를 생성한 후 그 안에 컬럼들을 정의한다.
+
+### Repository 생성하기
+
+기존의 Controller Service 구조에 Repository가 추가되었다.  
+DB관련된 작업은 Service가 아닌 Repository에서 수행한다.  
+아래와 같은 흐름  
+Controller -> Service -> Repository -> DB -> Service -> Controller
+
+@EntityRepository()
+클래스를 사용자 정의 저장소로 선언하는데 사용됩니다.
+일부 특정 엔터티를 관리하거나 일반 저장소 일 수 있습니다.
+typeorm0.3 이후로는 deprecated.
+
+### Entitiy 생성하기.
