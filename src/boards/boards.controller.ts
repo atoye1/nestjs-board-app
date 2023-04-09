@@ -11,17 +11,17 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { BoardsService } from './boards.service';
-import { Board, BoardStatus } from './board.model';
+import { BoardStatus } from './board-status.enum';
 import { createBoardDto } from './dto/create-board.dto';
 import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
 
 @Controller('boards') // 기본 라우팅
 export class BoardsController {
-  constructor(private boardsService: BoardsService) {}
+  // constructor(private boardsService: BoardsService) {}
 
-  @Get('/') // 추가 라우팅
-  getAllBoards(): Board[] {
-    return this.boardsService.getAllBoards();
+  // @Get('/') // 추가 라우팅
+  // getAllBoards(): Board[] {
+  //   return this.boardsService.getAllBoards();
   }
 
   @Get('/:id')

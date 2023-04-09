@@ -257,4 +257,4 @@ Controller -> Service -> Repository -> DB -> Service -> Controller
 일부 특정 엔터티를 관리하거나 일반 저장소 일 수 있습니다.
 typeorm0.3 이후로는 deprecated.
 
-### Entitiy 생성하기.
+### DB를 활용한 CRUD
