@@ -17,6 +17,11 @@ export class BoardsController {
     return this.boardsService.getBoardById(id);
   }
 
+  @Get('/:id/:alias')
+  getIdAndAlias(@Param() params: string[]) {
+    return params;
+  }
+
   @Post('/')
   createBoard(@Body() createBoardDto: createBoardDto): Board {
     return this.boardsService.createBoard(createBoardDto);

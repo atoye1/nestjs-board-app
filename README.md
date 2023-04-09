@@ -126,4 +126,8 @@ DTO를 사용하면 데이터 유효성을 효율적으로 검사할 수 있고
 
 ## id를 이용해 특정 게시물을 가져오기
 
-service와 컨트롤러 둘다 구현 필요하다.
+service와 컨트롤러 둘다 구현 필요하다.  
+@Param으로 uri 파라미터를 해석한다.
+
+모든 파라미터를 가지고 올때 : `findOne(@Param() params:string[])`
+특정 파라미터를 가지고 올때 : `findOne(@Param('id') id:string)`
