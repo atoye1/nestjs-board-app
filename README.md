@@ -7,12 +7,12 @@
 
 ## 프로젝트 기본 구조
 
-.eslintrc.js : 특정한 규칙에 따라 코드를 작성할 수 있게 도와주는 가이드라인. 코드컨벤션
-.prettierrc : 따옴표나 인덴트와 같은 미시적인 포맷을 일관되게 도와주는 포맷터
-nest-cli.json
-tsconfig.json : 타입스크립트 컴파일 설정
-tsconfig.build.json : build할 때 필요한 설정들 추가. exclude에 빌드할 필요없는 파일을 명시해줄 수 있다.
-package.json : 알제?, nest가 필요한 명령어를 많이 추가해준다. prestart, poststart 등을 추가하면 편리하다.
+.eslintrc.js : 특정한 규칙에 따라 코드를 작성할 수 있게 도와주는 가이드라인. 코드컨벤션  
+.prettierrc : 따옴표나 인덴트와 같은 미시적인 포맷을 일관되게 도와주는 포맷터  
+nest-cli.json  
+tsconfig.json : 타입스크립트 컴파일 설정  
+tsconfig.build.json : build할 때 필요한 설정들 추가. exclude에 빌드할 필요없는 파일을 명시해줄 수 있다.  
+package.json : 알제?, nest가 필요한 명령어를 많이 추가해준다. prestart, poststart 등을 추가하면 편리하다.  
 src/main.ts : 루트모듈인 app 모듈을 시작해준다. 엔트리포인트.
 
 ## Nest에서 Hello World를 출력하는 과정
