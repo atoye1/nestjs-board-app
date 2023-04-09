@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { Board } from './board.model';
 import { createBoardDto } from './dto/create-board.dto';
@@ -10,6 +10,11 @@ export class BoardsController {
   @Get('/') // 추가 라우팅
   getAllBoards(): Board[] {
     return this.boardsService.getAllBoards();
+  }
+
+  @Get('/:id')
+  getBoardById(@Param('id') id: string): Board {
+    return this.boardsService.getBoardById(id);
   }
 
   @Post('/')

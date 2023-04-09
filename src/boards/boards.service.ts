@@ -12,12 +12,17 @@ export class BoardsService {
   }
 
   createBoard(createBoardDto: createBoardDto): Board {
+    const { title, description } = createBoardDto;
     const board = {
       id: uuid(),
-      title: createBoardDto.title,
-      description: createBoardDto.description,
+      title: title,
+      description: description,
       status: BoardStatus.PUBLIC,
     };
     return board;
+  }
+
+  getBoardById(id: string): Board {
+    return this.boards.find((elem) => elem.id === id);
   }
 }
