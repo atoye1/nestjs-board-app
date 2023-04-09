@@ -1,6 +1,15 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Patch,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { BoardsService } from './boards.service';
-import { Board } from './board.model';
+import { Board, BoardStatus } from './board.model';
 import { createBoardDto } from './dto/create-board.dto';
 
 @Controller('boards') // 기본 라우팅
@@ -13,7 +22,7 @@ export class BoardsController {
   }
 
   @Get('/:id')
-  getBoardById(@Param('id') id: string): Board {
+  getBoardById(@Param('id', ParseIntPipe) id: string): Board {
     return this.boardsService.getBoardById(id);
   }
 
@@ -25,5 +34,18 @@ export class BoardsController {
   @Post('/')
   createBoard(@Body() createBoardDto: createBoardDto): Board {
     return this.boardsService.createBoard(createBoardDto);
+  }
+
+  @Delete('/:id')
+  deleteBoard(@Param('id') id: string): void {
+    this.boardsService.deleteBoard(id);
+  }
+
+  @Patch('/:id')
+  updateBoardStatus(
+    @Param('id') id: string,
+    @Body('status') status: BoardStatus,
+  ): Board {
+    return this.boardsService.updateBoardStatus(id, status);
   }
 }

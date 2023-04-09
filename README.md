@@ -131,3 +131,57 @@ service와 컨트롤러 둘다 구현 필요하다.
 
 모든 파라미터를 가지고 올때 : `findOne(@Param() params:string[])`
 특정 파라미터를 가지고 올때 : `findOne(@Param('id') id:string)`
+
+## ID를 이용해 특정 게시물을 삭제하고 업데이트 하기.
+
+@Delete, @Patch 데커레이터를 컨트롤러에 사용하고
+해당 컨트롤러가 호출하는 service에 관련 메서드를 정의하자.
+
+## Pipe
+
+파이프는 클래스인데, @Injectable() 데커레이터로 수식된 클래스다.  
+뇌피셜로 `파이프는 프로바이더의 일종이다.`라고 생각했는데 둘은 유사한 측면이 있지만 다르다.
+프로바이더는 다른 클래스에 주입되는 것
+
+파이프는 핸들러가 처리하는 인수에 대해서만 작동하는데
+data transformation과 validation을 수행한다.
+따라서 파이프의 호출시점은 핸들러 메서드가 호출되기 직전이다.
+
+파이프의 사용은 3가지 레벨에서 가능하다.
+
+1. 핸들러 레벨 파이프  
+   핸들러의 모든파라미터에 적용된다.
+
+   ```typescript
+   @Post()
+   @UsePipes(pipe)
+   createBoard(
+     @Body('title').title,
+     @Body('description').description
+   ){}
+   ```
+
+2. 파라미터 레벨 파이프  
+   title이라는 파라미터 하나에만 작동하도록 작성한 것.
+
+   ```typescript
+   @Post()
+   createBoard(
+     @Body('title', ParameterPipe).title,
+     @Body('description').description
+   ){}
+   ```
+
+3. 글로벌 레벨 파이프  
+   클라이언트에 들어오는 모든 요청에 대해서 적용된다.  
+   따라서 main.ts에 정의해야 한다.
+   ```typescript
+   async function bootstrap() {
+     const app = await NestFactory.create(AppModule);
+     app.useGlobalPipes(GlobalPipes);
+     await app.listen(3000);
+   }
+   bootstrap();
+   ```
+
+### 파이프를 이용한 유효성 체크
