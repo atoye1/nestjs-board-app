@@ -230,7 +230,7 @@ transfrom 메서드의 파라미터는 value, metadata이다.
 BoardStatusValidationPipe를 enum에서 정의된 PUBLIC | PRIVATE 이외의 값이 들어올때 에러를 던지도록 구현해야 한다.  
 필요한 자료구조를 정의하고, 조건에 부합하면 value를 반환하고, 아니면 BadRequestException을 던지면 된다.
 
-### postgresSQL 과 typeORM
+## postgresSQL 과 typeORM
 
 패키지 설치  
 `npm i pg typeorm @nestjs/typeorm`
@@ -257,7 +257,7 @@ Controller -> Service -> Repository -> DB -> Service -> Controller
 일부 특정 엔터티를 관리하거나 일반 저장소 일 수 있습니다.
 typeorm0.3 이후로는 deprecated.
 
-### DB를 활용한 CRUD
+## DB를 활용한 CRUD
 
 Repository를 Service에 Inject해줘야 된다.
 @InjectRepository 매개변수 데커레이터를 사용해야된다.
@@ -289,7 +289,7 @@ deleteBoard(@Param('id', ParseIntPipe) id: number): Promise<void> {
 
 단순히 DB에서 값을 조회하고, 업데이트하고, 변경하는 로직들.
 
-### 인증기능 구현을 위한 준비
+## 인증기능 구현을 위한 준비
 
 `nest g module auth`
 `nest g co auth --no-spec`
@@ -343,3 +343,32 @@ signature : 서버의 개인키로 서명된 서명. 따라서 클라이언트�
 jwt를 사용할 auth 서비스의 생성자에 JwtService를 주입한다.
 
 ### passport활용해서 jwt토큰을 받아 사용자 인증한다.
+
+1. 클라이언트가 로그인한다.
+2. 로그인 정보가 맞으면 토큰을 발급한다.
+3. 유저는 토큰을 쿠키에 저장한다.
+4. 유저는 요청을 보낼때마다 쿠키에 저장된 jwt토큰을 같이 송신한다.
+5. 서버는 jwt토큰을 검증해서 로그인정보를 판별한다.
+
+`npm i -D @types/passport-jwt` 타입을 설치한다.
+
+### passport 전략에서 validate에서 return 해주는 user객체 정보를 request객체에 삽입
+
+`@UseGuard(AuthGuard())`를 사용한다.
+
+## 미들웨어
+
+Pipes, Filters, Guards, Intercepters 네가지 종류 미들웨어가 있다.
+
+## 미들웨어가 호출되는 순서(!!중요)
+
+1. middleware
+2. guard
+3. pre-intercepter
+4. pipe
+5. controller
+6. service
+7. controller
+8. post-interceptor
+9. filter
+10. client

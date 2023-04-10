@@ -5,6 +5,7 @@ import { User } from './user.entitiy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { jwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
@@ -18,6 +19,9 @@ import { PassportModule } from '@nestjs/passport';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  // jwt strategy를 사용할 수 있게 등록
+  providers: [AuthService, jwtStrategy],
+  // 다른 모듈에서도 사용가능하도록 export
+  exports: [jwtStrategy, PassportModule],
 })
 export class AuthModule {}
