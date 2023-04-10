@@ -261,3 +261,12 @@ typeorm0.3 이후로는 deprecated.
 
 Repository를 Service에 Inject해줘야 된다.
 @InjectRepository 매개변수 데커레이터를 사용해야된다.
+
+### TypeORM 0.3 버전
+
+@EntityRepository() 가 deprecated되었다.
+대신 Entity를 바로 @InjectRepository 할 수 있다.
+굳이 board.repository.ts 를 별도로 할 필요없이 entitiy를 respository로 추상화해서 service단에서 호출 가능하다.
+이게 가능한 이유는 repository로 추상화되면 DB를 조작하는 create, find, findOne 등의 ORM에서 지원하는 메서드가 동일하기 때문이다.
+이전처럼 분리해서 Service의 생성자에 프라이빗 멤버로 주입해서 사용도 가능하지만 이번 게시판 프로젝트와 같이 DB에 간단한 CRUD만 수행할때는
+한번에 처리하는게 간편하다고 생각하므로(어차피 코드 한줄 또는 두줄이므로) service와 respository를 합쳤다.
