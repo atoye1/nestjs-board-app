@@ -1,4 +1,5 @@
 import {
+  Logger,
   Controller,
   Get,
   Post,
@@ -23,10 +24,12 @@ import { GetUser } from 'src/auth/get-user.decorator';
 @Controller('boards') // 기본 라우팅
 @UseGuards(AuthGuard())
 export class BoardsController {
+  private logger = new Logger('Board Controller');
   constructor(private boardsService: BoardsService) {}
 
   @Get()
   getAllBoards(@GetUser() user: User): Promise<Board[]> {
+    this.logger.verbose(`User ${user.username} trying to get all boards`);
     return this.boardsService.getAllBoards(user);
   }
 
@@ -41,12 +44,20 @@ export class BoardsController {
     @Body() createBoardDto: createBoardDto,
     @GetUser() user: User,
   ): Promise<Board> {
+    this.logger.verbose(
+      `User ${user.username} is creating board with Payload:${JSON.stringify(
+        createBoardDto,
+      )}`,
+    );
     return this.boardsService.createBoard(createBoardDto, user);
   }
 
   @Delete('/:id')
-  deleteBoard(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.boardsService.deleteBoardById(id);
+  deleteBoard(
+    @Param('id', ParseIntPipe) id: number,
+    @GetUser() user: User,
+  ): Promise<void> {
+    return this.boardsService.deleteBoardById(id, user);
   }
 
   @Patch('/:id/status')

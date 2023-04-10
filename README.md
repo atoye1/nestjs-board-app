@@ -9,7 +9,9 @@
 
 https://www.youtube.com/watch?v=3JminDpCJNE&t=513s
 
-## 프로젝트 기본 구조
+## Nest.js 기본구조
+
+### 설정파일
 
 .eslintrc.js : 특정한 규칙에 따라 코드를 작성할 수 있게 도와주는 가이드라인. 코드컨벤션  
 .prettierrc : 따옴표나 인덴트와 같은 미시적인 포맷을 일관되게 도와주는 포맷터  
@@ -19,7 +21,9 @@ tsconfig.build.json : build할 때 필요한 설정들 추가. exclude에 빌드
 package.json : 알제?, nest가 필요한 명령어를 많이 추가해준다. prestart, poststart 등을 추가하면 편리하다.  
 src/main.ts : 루트모듈인 app 모듈을 시작해준다. 엔트리포인트.
 
-## Nest에서 Hello World를 출력하는 과정
+### 기본 동작 원리
+
+Hello World를 출력하는 과정
 
 1. main.ts 에서 AppModule을 만든다.
 2. AppModule에는 Controller와 Service가 등록되어 있음
@@ -27,7 +31,7 @@ src/main.ts : 루트모듈인 app 모듈을 시작해준다. 엔트리포인트.
 4. Service에 Hello World를 리턴하는 로직이 작성되어 있다.
 5. 컨트롤러가 service를 실행시켜 response를 만들어서 돌려준다.
 
-## Nest의 모듈이란?
+## 모듈이란?
 
 우리가 만들 모듈들
 
@@ -41,7 +45,7 @@ AppModule은 루트모듈로서 항상 존재해야 한다.
 모듈은 기본적으로 `싱글턴`이므로 여러 모듈간에 동일한 인스턴스를 공유해준다.
 (프레임워크가 싱글턴으로 관리해준다.)
 
-## BoardModule 생성하기
+### BoardModule 생성하기
 
 빌트인 cli 명령어로 간단하게 생성할 수 있다.
 `nest g mo boards` : hey nest generate module boards!
@@ -53,24 +57,10 @@ AppModule은 루트모듈로서 항상 존재해야 한다.
 @Get @Post @Delete와 같은 데커레이터로 장식된 컨트롤러 클래스의 메서드는 핸들러라 한다.
 데커레이터의 인자로 라우팅 경로와 파라미터 설정 가능한다.
 
-## Board Contoller 만들기
+### Board Contoller 만들기
 
 `nest g co boars --no-spec`
 import 까지 nest가 자동으로 해준다.
-
-## Board Service 만들기
-
-서비스는 보통 데이터베이스 관련 로직을 처리한다.
-역시 편리한 cli명령어를 활용한다.
-`nest g s boards --no-spec`
-
-서비스도 역시 클래스인데, @Injectable 데커레이터가 적용되어 있다.
-이를 통해서 다른 컴포넌트에서 이 서비스를 사용할 수 있다.
-
-서비스를 컨트롤러에서 이용하도록 의존성 주입해준다. (Dependency Injection)
-보드 컨트롤러의 생성자 안에서 타입이 지정된 프라이빗 멤버로 주입된다.
-간략하게 생성자 지정시 빈 바디`{ ... }`를 포함해야되는것 잊지 말자
-`constructor(private myService:MyService) {}`
 
 ## Provider란?
 
@@ -86,19 +76,33 @@ Service는 @Injectable로 랩핑된 클래스다. 따라서 어플리케이션 �
 Service는 데이터 유효성체크나 DB와 통신하는 작업을 주로 수행한다.
 Controller 생성자에 속성으로 Inject해서 사용한다.
 
+### Board Service 만들기
+
+서비스는 보통 데이터베이스 관련 로직을 처리한다.
+역시 편리한 cli명령어를 활용한다.
+`nest g s boards --no-spec`
+
+서비스도 역시 클래스인데, @Injectable 데커레이터가 적용되어 있다.
+이를 통해서 다른 컴포넌트에서 이 서비스를 사용할 수 있다.
+
+서비스를 컨트롤러에서 이용하도록 의존성 주입해준다. (Dependency Injection)
+보드 컨트롤러의 생성자 안에서 타입이 지정된 프라이빗 멤버로 주입된다.
+간략하게 생성자 지정시 빈 바디`{ ... }`를 포함해야되는것 잊지 말자
+`constructor(private myService:MyService) {}`
+
 ## CRUD에서 R에 해당하는 로직 구현하기
 
 아래의 데이터 흐름을 잘 파악하기.
 request -> controller -> service -> controller -> response
 
-## Board 모델 정의하기.
+### Board 모델 정의하기.
 
 엔티티가 가지고 있어야 할 속성들을 정의한 것이 모델
 board.model.ts로 생성한다.
 인터페이스나 클래스를 활용해서 생성한다.
 정의한 모델을 타입으로 재활용하면 코드의 가독성과 안정성이 증가한다.
 
-## 게시물 생성하기 Service 부분 추가
+### 게시물 생성하기 Service 부분 추가
 
 게시물의 id를 유니크하게 정해주기 위해서 uuid 패키지를 사용한다.
 
@@ -106,11 +110,24 @@ board.model.ts로 생성한다.
 `npm i --save-dev @types/uuid`  
 `import {v1 as uuid} from uuid`
 
-## 게시물 생성하기 Controller 추가
+### 게시물 생성하기 Controller 추가
 
 포스트맨이나 curl을 활용해서 POST 리퀘스트 날리기
 -H Content-Type을 제대로 지정해줘야 curl에서 바디가 제대로 전달된다.
 `curl localhost:3000/boards -H "Content-Type:Application/json" -X POST -d '{"title":"board 1", "description":"description 1"}'`
+
+### id를 이용해 특정 게시물을 가져오기
+
+service와 컨트롤러 둘다 구현 필요하다.  
+@Param으로 uri 파라미터를 해석한다.
+
+모든 파라미터를 가지고 올때 : `findOne(@Param() params:string[])`
+특정 파라미터를 가지고 올때 : `findOne(@Param('id') id:string)`
+
+### ID를 이용해 특정 게시물을 삭제하고 업데이트 하기.
+
+@Delete, @Patch 데커레이터를 컨트롤러에 사용하고
+해당 컨트롤러가 호출하는 service에 관련 메서드를 정의하자.
 
 ## Data Transfer Object
 
@@ -128,20 +145,9 @@ DTO를 사용하면 데이터 유효성을 효율적으로 검사할 수 있고
 확장에는 열려있고 변경에는 닫혀있는 구조가 된다.(DTO 변경시 해당 클래스와 관련된 로직만 변경하고 호출 부분은 변경하지 않아도 되기 때문이다.)
 그래야 유지보수가 편하고, 칼퇴가 가능하다.
 
-## id를 이용해 특정 게시물을 가져오기
-
-service와 컨트롤러 둘다 구현 필요하다.  
-@Param으로 uri 파라미터를 해석한다.
-
-모든 파라미터를 가지고 올때 : `findOne(@Param() params:string[])`
-특정 파라미터를 가지고 올때 : `findOne(@Param('id') id:string)`
-
-## ID를 이용해 특정 게시물을 삭제하고 업데이트 하기.
-
-@Delete, @Patch 데커레이터를 컨트롤러에 사용하고
-해당 컨트롤러가 호출하는 service에 관련 메서드를 정의하자.
-
 ## Pipe
+
+### 파이프란?
 
 파이프는 클래스인데, @Injectable() 데커레이터로 수식된 클래스다.  
 뇌피셜로 `파이프는 프로바이더의 일종이다.`라고 생각했는데 둘은 유사한 측면이 있지만 다르다.
@@ -150,6 +156,8 @@ service와 컨트롤러 둘다 구현 필요하다.
 파이프는 핸들러가 처리하는 인수에 대해서만 작동하는데
 data transformation과 validation을 수행한다.
 따라서 파이프의 호출시점은 핸들러 메서드가 호출되기 직전이다.
+
+### 파이프의 종류
 
 파이프의 사용은 3가지 레벨에서 가능하다.
 
@@ -236,6 +244,11 @@ BoardStatusValidationPipe를 enum에서 정의된 PUBLIC | PRIVATE 이외의 값
 `npm i pg typeorm @nestjs/typeorm`
 공식문서 참고  
 https://docs.nestjs.com/techniques/database
+
+### postgresSQL
+
+도커를 사용해서 간단하게 구동,
+dbBeaver 활용
 
 ### typeorm 설정
 
@@ -373,7 +386,7 @@ Pipes, Filters, Guards, Intercepters 네가지 종류 미들웨어가 있다.
 9. filter
 10. client
 
-## 커스템 데커레이터
+### 커스템 데커레이터
 
 req.user가 아니라 user로 바로 유저정보를 가져올 수 있게하기 위한 커스텀 데커레이터
 nestjs에 포함되어 있는 createParamDecorator를 활용해서
@@ -391,7 +404,7 @@ export const GetUser = createParamDecorator(
 );
 ```
 
-## 다른 모듈에서 정의된 Guard미들웨어 사용하기
+### 다른 모듈에서 정의된 Guard()미들웨어 사용하기
 
 게시글에 대해 CRUD에 컨트롤러 레벨로 @UserGuard(AuthGuard()) 적용하면  
 해당 컨트롤러의 전체 기능을 로그인 사용자만 접근가능하다.
@@ -411,3 +424,42 @@ auth 모듈을 임포트하고 데커레이터로 적용만 해주면 해당 미
 @ManyToOne((type) => User, (user) => user.boards, { eager: false })
 user: User;
 ```
+
+### 자신이 생성한 게시글만 지울수 있게하기
+
+typeorm 버전이 바뀌어서 쿼리를 이렇게 nested object 형식으로 해줘야된다.
+`const result = await this.boardRepository.delete({ id, user: { id: user.id }, }); `
+
+## 로그만들기
+
+원래는 기능 하나하나 추가하면서 거기에 맞는 로그출력을 해줘야한다.
+하지만 배우는 입장에서 섞이면 혼란스러우니 뒷장에서 배운다.
+
+보통 winston을 많이 사용하는데 일단 여기선 nestjs에 빌트인 로거를 사용한다.
+Logger.log(<message>)
+컨트롤러 안에 멤버로 새로운 로거객체를 생성한다.
+어디서 로그가 호출되는지 간단하게 파악 가능하다.
+
+```typescript
+// 컨트롤러 클래스 안에다 넣어준다.
+private logger = new Logger('Board Controller');
+this.logger.verbose(`User ${user.username} trying to get all boards`);
+// 변수를 로그로 출력하려면 JSON.stringify해줘야 내용이 제대로 출력된다.
+//아니면 [Object...] 이런 형식으로 출력된다.
+this.logger.verbose( `User ${user.username} is creating board with Payload:${JSON.stringify( createBoardDto,)}`,);
+```
+
+## 설정파일 만들기
+
+### Codebase vs Environment Variable(환경변수)
+
+port, dbtype, dbport, jwt expires in 등을 default에 넣는다.
+
+npm i config
+
+프로젝트 루트 디렉터리에 config라는 폴더를 만들고 아래와 같은 yml을 생성한다.
+default.yml : 개발과 배포환경 동일한 환경변수
+development.yml, production.yml : 개발과 배포시 다른 환경변수
+
+참고로 synchronize true는 시작할때 entitiy 변경이 있으면 컬럼을 다시 생성해준다.
+프로덕션에서는 당연히 false를 해줘야 된다.
