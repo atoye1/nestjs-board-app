@@ -258,3 +258,6 @@ Controller -> Service -> Repository -> DB -> Service -> Controller
 typeorm0.3 이후로는 deprecated.
 
 ### DB를 활용한 CRUD
+
+Repository를 Service에 Inject해줘야 된다.
+@InjectRepository 매개변수 데커레이터를 사용해야된다.
