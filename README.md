@@ -270,3 +270,76 @@ Repository를 Service에 Inject해줘야 된다.
 이게 가능한 이유는 repository로 추상화되면 DB를 조작하는 create, find, findOne 등의 ORM에서 지원하는 메서드가 동일하기 때문이다.
 이전처럼 분리해서 Service의 생성자에 프라이빗 멤버로 주입해서 사용도 가능하지만 이번 게시판 프로젝트와 같이 DB에 간단한 CRUD만 수행할때는
 한번에 처리하는게 간편하다고 생각하므로(어차피 코드 한줄 또는 두줄이므로) service와 respository를 합쳤다.
+
+### Remove vs Delete
+
+Remove는 무조건 존재하는 아이템을 지워야 한다.
+Delete는 존재하면 지우고, 존재하지 않으면 그대로 놔둔다.
+
+@Params안에서 ParseIntPipe 활용하기
+
+```typescript
+@Delete('/:id')
+deleteBoard(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.boardsService.deleteBoardById(id);
+}
+```
+
+### 기타 CRUD 오퍼레이션
+
+단순히 DB에서 값을 조회하고, 업데이트하고, 변경하는 로직들.
+
+### 인증기능 구현을 위한 준비
+
+`nest g module auth`
+`nest g co auth --no-spec`
+`nest g service auth --no-spec`
+
+### User를 위한 Entity 생성
+
+### Class Validator를 활용한 입력값 검사하기
+
+dto에 validation조건을 정의해놓고, 컨트롤러에 `@Body(ValidationPipe)`를 추가해서 트리거한다
+
+### user이름을 유니크하게 만들기
+
+DB(엔터티) 레벨에서 구현하는 것
+만약에 500 에러말고 구체적 에러를 던지려면 try/catch 지정해줘야 한다.
+
+### bcrypt로 패스워드 암호화해서 DB에 저장하기.
+
+### 로그인 기능 구현하기
+
+컨트롤러로 들어온 아이디와 패스워드를 DB에 저장된 내역과 비교한다.
+`bcrypt.compare(password, db.password)`가 true이면 로그인이 성공한다.
+
+### JWT를 활용한 로그인
+
+정보를 안정적으로 저장하기 위한 토큰
+header, payload, signature로 구성되어 있음
+header는 메타데이터를 포함: 타입, 해싱 알고리즘 등
+payload에 있는 내용은 평문이다.
+signature : 서버의 개인키로 서명된 서명. 따라서 클라이언트는 정당한 서버에서 온 토큰인지 검증 가능함.
+
+필요한 모듈 설치
+`npm i @nestjs/jwt @nestjs/passport passport passport-jwt`
+
+```typescript
+// 아래와 같이 모듈을 등록한다.
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    PassPortModule.register({defaultStrategy:'jwt}),
+    JwtModule.register({
+      secret: 'Secret1234',
+      signOptions: {
+        expiresIn: 60 * 60,
+      },
+    }),
+  ]
+})
+```
+
+jwt를 사용할 auth 서비스의 생성자에 JwtService를 주입한다.
+
+### passport활용해서 jwt토큰을 받아 사용자 인증한다.
