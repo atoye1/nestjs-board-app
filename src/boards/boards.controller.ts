@@ -9,20 +9,25 @@ import {
   ParseIntPipe,
   UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { Board } from './board.entitiy';
 import { BoardsService } from './boards.service';
 import { BoardStatus } from './board-status.enum';
 import { createBoardDto } from './dto/create-board.dto';
 import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
+import { AuthGuard } from '@nestjs/passport';
+import { User } from 'src/auth/user.entitiy';
+import { GetUser } from 'src/auth/get-user.decorator';
 
 @Controller('boards') // 기본 라우팅
+@UseGuards(AuthGuard())
 export class BoardsController {
   constructor(private boardsService: BoardsService) {}
 
   @Get()
-  getAllBoards(): Promise<Board[]> {
-    return this.boardsService.getAllBoards();
+  getAllBoards(@GetUser() user: User): Promise<Board[]> {
+    return this.boardsService.getAllBoards(user);
   }
 
   @Get('/:id')
@@ -32,8 +37,11 @@ export class BoardsController {
 
   @Post('/')
   @UsePipes(ValidationPipe)
-  createBoard(@Body() createBoardDto: createBoardDto): Promise<Board> {
-    return this.boardsService.createBoard(createBoardDto);
+  createBoard(
+    @Body() createBoardDto: createBoardDto,
+    @GetUser() user: User,
+  ): Promise<Board> {
+    return this.boardsService.createBoard(createBoardDto, user);
   }
 
   @Delete('/:id')
